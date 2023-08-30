@@ -159,6 +159,16 @@ public class GCProfiler implements InternalProfiler {
                                 1.0 * allocated / 1024 / 1024 * TimeUnit.SECONDS.toNanos(1) / (afterTime - beforeTime) :
                                 Double.NaN,
                         "MB/sec", AggregationPolicy.AVG));
+                // Cal alloc without gc pause time
+                double val = Double.NaN;
+                if (afterTime != beforeTime) {
+                    val = (gcCount != beforeGCCount || gcTime != beforeGCTime) ?
+                                    1.0 * allocated / 1024 / 1024 * TimeUnit.SECONDS.toNanos(1) / (afterTime - beforeTime - 1e6 * (gcTime - beforeGCTime)) :
+                                    1.0 * allocated / 1024 / 1024 * TimeUnit.SECONDS.toNanos(1) / (afterTime - beforeTime);
+                }
+                results.add(new ScalarResult("gc.alloc.rate_mutator",
+                        val,
+                        "MB/sec", AggregationPolicy.AVG));
                 if (allocated != 0) {
                     long allOps = iResult.getMetadata().getAllOps();
                     results.add(new ScalarResult("gc.alloc.rate.norm",
@@ -170,6 +180,9 @@ public class GCProfiler implements InternalProfiler {
             } else {
                 // When allocation profiling fails, make sure it is distinguishable in report
                 results.add(new ScalarResult("gc.alloc.rate",
+                        Double.NaN,
+                        "MB/sec", AggregationPolicy.AVG));
+                results.add(new ScalarResult("gc.alloc.rate_mutator",
                         Double.NaN,
                         "MB/sec", AggregationPolicy.AVG));
             }
