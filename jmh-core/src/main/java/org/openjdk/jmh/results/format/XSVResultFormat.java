@@ -81,6 +81,8 @@ class XSVResultFormat implements ResultFormat {
         out.print(delimiter);
         out.printf("\"Score Error (%.1f%%)\"", 99.9);
         out.print(delimiter);
+        out.printf("\"Score Error (%.1f%%)\"", 99.0);
+        out.print(delimiter);
         out.print("\"Unit\"");
         for (String k : params) {
             out.print(delimiter);
@@ -105,6 +107,8 @@ class XSVResultFormat implements ResultFormat {
         out.print(emit(result.getScore()));
         out.print(delimiter);
         out.print(emit(result.getScoreError()));
+        out.print(delimiter);
+        out.print(emit(result.getScoreError(0.99)));
         out.print(delimiter);
         out.print("\"");
         out.print(result.getScoreUnit());

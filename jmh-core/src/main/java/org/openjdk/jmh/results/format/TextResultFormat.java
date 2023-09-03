@@ -119,6 +119,8 @@ class TextResultFormat implements ResultFormat {
         out.printf("%" + scoreLen + "s",    "Score");
         out.print("  ");
         out.printf("%" + scoreErrLen + "s", "Error");
+        out.print("  ");
+        out.printf("%" + scoreErrLen + "s", "Error (0.99)");
         out.printf("%" + unitLen + "s",     "Units");
         out.println();
 
@@ -147,6 +149,14 @@ class TextResultFormat implements ResultFormat {
                     out.print(ScoreFormatter.formatError(scoreErrLen, pRes.getScoreError()));
                 } else {
                     out.print("  ");
+                    out.printf("%" + scoreErrLen + "s", "");
+                }
+
+                if (!Double.isNaN(pRes.getScoreError(0.99)) && !ScoreFormatter.isApproximate(pRes.getScore())) {
+                    out.print(" ");
+                    out.print(ScoreFormatter.formatError(scoreErrLen, pRes.getScoreError(0.99)));
+                } else {
+                    out.print(" ");
                     out.printf("%" + scoreErrLen + "s", "");
                 }
 
@@ -181,6 +191,14 @@ class TextResultFormat implements ResultFormat {
                     out.print(ScoreFormatter.formatError(scoreErrLen, subRes.getScoreError()));
                 } else {
                     out.print("  ");
+                    out.printf("%" + scoreErrLen + "s", "");
+                }
+
+                if (!Double.isNaN(subRes.getScoreError(0.99)) && !ScoreFormatter.isApproximate(subRes.getScore())) {
+                    out.print(" ");
+                    out.print(ScoreFormatter.formatError(scoreErrLen, subRes.getScoreError(0.99)));
+                } else {
+                    out.print(" ");
                     out.printf("%" + scoreErrLen + "s", "");
                 }
 

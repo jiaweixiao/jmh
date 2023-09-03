@@ -136,6 +136,18 @@ public abstract class Result<T extends Result<T>> implements Serializable {
                 throw new IllegalStateException("Unknown aggregation policy: " + policy);
         }
     }
+    public double getScoreError(double p) {
+        switch (policy) {
+            case AVG:
+                return statistics.getMeanErrorAt(p);
+            case SUM:
+            case MIN:
+            case MAX:
+                return Double.NaN;
+            default:
+                throw new IllegalStateException("Unknown aggregation policy: " + policy);
+        }
+    }
 
     /**
      * The score confidence interval for this result.
